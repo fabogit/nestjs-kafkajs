@@ -5,12 +5,12 @@ import { ProducerService } from './kafka/producer.service';
 export class AppService {
   constructor(private readonly producerService: ProducerService) {}
 
-  async getHello() {
+  async produceMessage(message: string) {
     this.producerService.produce({
       topic: 'producerTopic',
       messages: [
         {
-          value: 'Hello there',
+          value: message,
         },
       ],
     });

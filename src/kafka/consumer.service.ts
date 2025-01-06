@@ -18,7 +18,7 @@ export class ConsumerService implements OnApplicationShutdown {
 
   // disconnect consumers on shoutdown
   async onApplicationShutdown(signal?: string) {
-    this.logger.log(`Receivied signal: ${signal}`);
+    this.logger.log(`Receivied signal: ${signal} disconnecting consumers...`);
     for (const consumer of this.consumers) {
       await consumer.disconnect();
     }
