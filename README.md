@@ -32,6 +32,34 @@
 $ pnpm install
 ```
 
+Rename the file `.env copy` to `.env`
+
+Start the docker containers
+
+```bash
+$ docker compose up
+```
+
+Start server in watch mode
+```bash
+# watch mode
+$ pnpm run start:dev
+```
+
+Test calling:
+
+```bash
+curl -X GET \
+  http://localhost:3000 \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "topic": "testTopic",
+    "message": "Any message will do"
+  }'
+```
+
+Uncomment ln28 in `test.consumer.ts` to test DLQ
+
 ## Compile and run the project
 
 ```bash
