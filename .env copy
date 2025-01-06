@@ -1,3 +1,3 @@
 KAFKA_BROKER=localhost:9092
+MONGODB_URI=mongodb://localhost:27018/nestjs-kafka-dlq
 PORT=3000
-MONGODB_URI=

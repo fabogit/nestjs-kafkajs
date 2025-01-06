@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { IConsumer } from './interfaces/consumer.interface';
 import { KafkaConsumerOptions } from './interfaces/kafkajs-consumer-options.interface';
 import { KafkajsConsumer } from './kafkajs.consumer';
+import { DatabaseService } from 'src/database/database.service';
 
 /**
  * A service that manages Kafka consumers.
@@ -17,7 +18,10 @@ export class ConsumerService implements OnApplicationShutdown {
     timestamp: true,
   });
   private readonly consumers: IConsumer[] = [];
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly databaseService: DatabaseService,
+  ) {}
 
   /**
    * Disconnects all registered consumers when the application shuts down.
@@ -49,6 +53,7 @@ export class ConsumerService implements OnApplicationShutdown {
    */
   async consume({ topic, config, onMessage }: KafkaConsumerOptions) {
     const consumer = new KafkajsConsumer(
+      this.databaseService,
       topic,
       config,
       this.configService.get('KAFKA_BROKER'),

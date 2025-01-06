@@ -17,9 +17,9 @@ export class AppService {
   async sendMessage(topic: string, message: string) {
     try {
       await this.producerService.produce(topic, { value: message });
-      return { produced: true };
+      return { message: 'Message emitted' };
     } catch (err) {
-      throw Error(err);
+      throw new Error(err);
     }
   }
 }

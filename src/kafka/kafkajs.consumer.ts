@@ -7,8 +7,9 @@ import {
   KafkaMessage,
 } from 'kafkajs';
 import * as retry from 'async-retry';
-import { IConsumer } from './interfaces/consumer.interface';
 import { sleep } from 'src/utils/sleep';
+import { IConsumer } from './interfaces/consumer.interface';
+import { DatabaseService } from 'src/database/database.service';
 
 /**
  * A Kafka consumer implementation using the `kafkajs` library.
@@ -21,11 +22,13 @@ export class KafkajsConsumer implements IConsumer {
 
   /**
    * Creates a new KafkajsConsumer instance.
+   * @param topic - The db service used to save DLQ messages.
    * @param topic - The topics to subscribe to.
    * @param config - The consumer configuration options.
    * @param broker - The Kafka broker address.
    */
   constructor(
+    private readonly databaseService: DatabaseService,
     private readonly topic: ConsumerSubscribeTopics,
     config: ConsumerConfig,
     broker: string,
@@ -96,5 +99,10 @@ export class KafkajsConsumer implements IConsumer {
     });
   }
 
-  private async addMessageToDlq(message: KafkaMessage) {}
+  private async addMessageToDlq(message: KafkaMessage) {
+    await this.databaseService
+      .getDbHandle()
+      .collection('dlq')
+      .insertOne({ value: message.value, topic: this.topic.topics });
+  }
 }
