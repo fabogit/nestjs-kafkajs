@@ -9,7 +9,6 @@ export class AppController {
   /**
    * Endpoint for sending a message to a Kafka topic.
    * Receives the topic and message from the request body.
-   *
    * @param payload - The request body containing the topic and message.
    * @returnsA promise that resolves to an object containing information about the production result.
    */

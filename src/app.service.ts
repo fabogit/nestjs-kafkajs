@@ -8,7 +8,6 @@ export class AppService {
   /**
    * Sends a message to a specified Kafka topic using the ProducerService.
    * Logs the sent message to the console. Throws an error if the message production fails.
-   *
    * @param topic - The name of the Kafka topic to send the message to.
    * @param message - The message content to send.
    * @returns A promise that resolves to an object confirming successful production.

@@ -72,6 +72,7 @@ export class KafkajsConsumer implements IConsumer {
    * Starts consuming messages from the subscribed topics.
    * This method subscribes to the specified topics and then runs the consumer in a loop,
    * processing each received message through the provided `onMessage` callback.
+   * Attempts to process the message with retries in case of errors and after 3 retries save the message to the DLQ
    * @param onMessage - A callback function that is invoked for each received message.
    *        The callback receives a `KafkaMessage` object as an argument.
    * @returns A promise that resolves when consumption is stopped.
@@ -99,7 +100,16 @@ export class KafkajsConsumer implements IConsumer {
     });
   }
 
+  /**
+   * Adds a message to the Dead-Letter Queue (DLQ).
+   * @param message - The Kafka message to add to the DLQ.
+   * @returns A Promise that resolves when the message has been added to the DLQ.
+   */
   private async addMessageToDlq(message: KafkaMessage) {
+    /**
+     * Inserts the message value and topic into the 'dlq' collection of the database.
+     * Uses the injected `databaseService` to get a database handle.
+     */
     await this.databaseService
       .getDbHandle()
       .collection('dlq')

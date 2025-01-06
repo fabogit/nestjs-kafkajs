@@ -6,9 +6,7 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap', { timestamp: true });
 
   const app = await NestFactory.create(AppModule);
-
   app.enableShutdownHooks();
-  logger.log('Setting up validation pipes...');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // Strip out properties not in DTO
@@ -16,6 +14,8 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to DTO instances
     }),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, () => {
+    logger.log(`Server is ready ✅`);
+  });
 }
 bootstrap();
